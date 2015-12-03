@@ -12,9 +12,13 @@ Author:
 'use strict';
 
 angular
-    .module('MainApplication', [
+    .module('leagueStatsApp', [
         'ui.bootstrap',
         'ngRoute',
         'appRoutes',
-        'MainCtrl',
+        'StatsControl',
+        'SummonerService',
+        'MatchListService',
+        'MatchService',
+        'ChampionService'
     ]);
