@@ -5,9 +5,12 @@
         <input type="submit" ng-click="queryForSummonerMatches(summoner)" value="Query Ranked Matches" />
     </div>
     <div>
-        <div ng-repeat="champ in champ_summary | toArray | orderBy : '-times_played'">
+        <a href = "/kda-hour">Go to the KDA Chart</a>
+    </div>
+    <div>
+        <div ng-repeat="champ in champ_summary | toArray | orderBy : '-kda'">
             <img style="height: 40px; width: 40px;"ng-src="{{champ.image_url}}" />
             <span ng-champ-display />
         </div>
     </div>
-</div>  
+</div>

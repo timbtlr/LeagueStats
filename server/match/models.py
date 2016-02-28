@@ -1,6 +1,6 @@
 from django.db import models
-from django.utils import timezone
 from summoner.models import Summoner
+
 
 class Match(models.Model):
     """
@@ -9,11 +9,13 @@ class Match(models.Model):
     """
     id = models.CharField(primary_key=True, max_length=255)
     summoner = models.ForeignKey(Summoner)
+    champ = models.IntegerField(default=0)
     timestamp = models.DateTimeField()
     win = models.BooleanField(default=False)
     level = models.IntegerField()
     kills = models.IntegerField()
     deaths = models.IntegerField()
+    assists = models.IntegerField()
     gold_earned = models.IntegerField()
     double_kills = models.IntegerField()
     triple_kills = models.IntegerField()

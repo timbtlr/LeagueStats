@@ -3,7 +3,7 @@ angular
     .factory('summonerFactory', ['$http', function($http) {
         return {
             get : function(summoner_name, league_api_key) {
-                return $http.get('https://na.api.pvp.net/api/lol/na/v1.4/summoner/by-name/' + summoner_name,  {
+                return $http.get('http://localhost:8000/summoners/?name=' + summoner_name,  {
                     params: {api_key: league_api_key}
                 });
             }
@@ -15,13 +15,7 @@ angular
     .factory('matchListFactory', ['$http', function($http) {
         return {
             get : function(summoner_id, league_api_key) {
-                return $http.get('https://na.api.pvp.net/api/lol/na/v2.2/matchlist/by-summoner/' + summoner_id,  {
-                    params: {
-                        api_key: league_api_key,
-                        rankedQueues: 'RANKED_SOLO_5x5',
-                        seasons: 'PRESEASON3,SEASON3,PRESEASON2014,SEASON2014,PRESEASON2015,SEASON2015,PRESEASON2016,SEASON2016'
-                    }
-                });
+                return $http.get('http://localhost:8000/matches/?summoner=' + summoner_id);
             }
         }
     }])
@@ -49,3 +43,24 @@ angular
             }
         }
     }])
+
+angular
+    .module('KdaService', [])
+    .factory('kdaFactory', ['$http', function($http) {
+        return {
+            get : function(champ_name) {
+                return $http.get('http://localhost:8000/matches/hourly-kda/?summoner=' + champ_name);
+            }
+        }
+    }])
+
+angular
+    .module('DailyKdaService', [])
+    .factory('dailyKdaFactory', ['$http', function($http) {
+        return {
+            get : function(champ_name) {
+                return $http.get('http://localhost:8000/matches/daily-kda/?summoner=' + champ_name);
+            }
+        }
+    }])
+
