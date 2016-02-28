@@ -35,4 +35,5 @@ class SummonerViewSet(viewsets.ModelViewSet):
         else:
             status_code = 200
 
+        summoner.save()
         return Response(data=summoner_serializer.data, status=status_code)
