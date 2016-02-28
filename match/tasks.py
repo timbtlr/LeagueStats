@@ -1,11 +1,9 @@
 import datetime
 from time import sleep
 from summoner.models import Summoner
-from api_client.league_client import LeagueAPIClient
+from api_client.league_client import api_client
 from match.models import Match
 from champion.models import Champion
-
-api_client = LeagueAPIClient()
 
 
 def populate_champions():
