@@ -7,6 +7,7 @@ class LeagueAPIClient():
     def __init__(self):
         self.league_api_url = "https://na.api.pvp.net/api/lol/na/v2.2/"
         self.static_champ_url = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/"
+        self.summoner_url = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/by-name/{}"
 
     def _call_endpoint(self, url, params=None):
         response = requests.get(
@@ -35,6 +36,14 @@ class LeagueAPIClient():
         url = self.static_champ_url + "champion/{}".format(champ_id)
         params = {'api_key': settings.LEAGUE_API_KEY}
         return self._call_endpoint(url, params)
+
+    def get_summoner_info(self, summoner_name):
+        url = self.summoner_url.format(summoner_name)
+        params = {'api_key': settings.LEAGUE_API_KEY}
+        return self._call_endpoint(url, params).get(summoner_name)
+
+
+api_client = LeagueAPIClient()
 
 
 class RateLimitedException(Exception):

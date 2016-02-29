@@ -26,6 +26,7 @@ class MatchViewSet(viewsets.ModelViewSet):
 
         timestamps = []
         kdas = []
+        win = []
 
         for match in matches.iterator():
             timestamps.append(match.timestamp.hour)
@@ -33,10 +34,13 @@ class MatchViewSet(viewsets.ModelViewSet):
                 kdas.append(float(match.kills + match.assists) / match.deaths)
             else:
                 kdas.append(float(match.kills + match.assists))
+            win.append(int(match.win))
+
 
         frame = pd.DataFrame({
             "Hour": timestamps,
-            "KDA": kdas
+            "KDA": kdas,
+            "Win": win
         })
 
         kda_groupings = frame.groupby(['Hour']).aggregate(np.mean)

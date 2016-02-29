@@ -1,11 +1,9 @@
 import datetime
 from time import sleep
 from summoner.models import Summoner
-from api_client.league_client import LeagueAPIClient
+from api_client.league_client import api_client
 from match.models import Match
 from champion.models import Champion
-
-api_client = LeagueAPIClient()
 
 
 def populate_champions():
@@ -33,37 +31,38 @@ def schedule_pull_matches():
 def pull_matches(summoner_id):
     matches = api_client.get_match_list(summoner_id)
 
-    for match in matches.get("matches"):
-        match_id = match.get("matchId")
-        match_time = match.get("timestamp")
-        champ_id = match.get("champion")
-        create_champion(champ_id)
+    if matches.get("matches", None):
+        for match in matches.get("matches"):
+            match_id = match.get("matchId")
+            match_time = match.get("timestamp")
+            champ_id = match.get("champion")
+            create_champion(champ_id)
 
-        try:
-            Match.objects.get(id=match_id, summoner__id=summoner_id)
-        except Match.DoesNotExist:
-            match_data = api_client.get_match(match_id, summoner_id)
+            try:
+                Match.objects.get(id=match_id, summoner__id=summoner_id)
+            except Match.DoesNotExist:
+                match_data = api_client.get_match(match_id, summoner_id)
 
-            # Get participant ID
-            participant_id = None
-            for player in match_data.get("participantIdentities"):
-                if int(player.get("player").get("summonerId")) == int(summoner_id):
-                    participant_id = player.get("participantId")
-                    break
+                # Get participant ID
+                participant_id = None
+                for player in match_data.get("participantIdentities"):
+                    if int(player.get("player").get("summonerId")) == int(summoner_id):
+                        participant_id = player.get("participantId")
+                        break
 
-            # Find participant in the list, create a match with it
-            if participant_id:
-                for participant in match_data.get("participants"):
-                    if participant.get("participantId") == participant_id:
-                        create_match(
-                            match_id,
-                            summoner_id,
-                            match_time,
-                            champ_id,
-                            participant.get("stats")
-                        )
+                # Find participant in the list, create a match with it
+                if participant_id:
+                    for participant in match_data.get("participants"):
+                        if participant.get("participantId") == participant_id:
+                            create_match(
+                                match_id,
+                                summoner_id,
+                                match_time,
+                                champ_id,
+                                participant.get("stats")
+                            )
 
-            sleep(3)
+                sleep(3)
 
 
 def create_match(match_id, summoner_id, match_time, champ_id, participant_stats):

@@ -19,9 +19,16 @@ angular.module('KdaControl', [])
             xAxis: {
                 categories: []
             },
-            series: [{
-                data: []
-            }],
+            series: [
+                {
+                    name: 'KDA',
+                    data: []
+                },
+                {
+                    name: 'Win Percent',
+                    data: []
+                }
+            ],
             size: {
                 width: 800,
                 height: 300
@@ -30,6 +37,7 @@ angular.module('KdaControl', [])
 
         $scope.queryForHourlyKda = function(summoner_name) {
             $scope.chartOptions.series[0].data = [];
+            $scope.chartOptions.series[1].data = [];
             $scope.chartOptions.xAxis.categories = [];
 
             kdaFactory.get(summoner_name).then(function(result) {
@@ -42,11 +50,22 @@ angular.module('KdaControl', [])
                         $scope.chartOptions.xAxis.categories.push(key);
                     }
                 }
+
+                var win_info = result.data['Win'];
+                var data = eval(win_info);
+
+                for (var key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        $scope.chartOptions.series[1].data.push(data[key]);
+                        $scope.chartOptions.xAxis.categories.push(key);
+                    }
+                }
             });
         };
 
         $scope.queryForDailyKda = function(summoner_name) {
             $scope.chartOptions.series[0].data = [];
+            $scope.chartOptions.series[1].data = [];
             $scope.chartOptions.xAxis.categories = [];
 
             dailyKdaFactory.get(summoner_name).then(function(result) {

@@ -3,7 +3,7 @@ angular
     .factory('summonerFactory', ['$http', function($http) {
         return {
             get : function(summoner_name, league_api_key) {
-                return $http.get('http://localhost:8000/summoners/?name=' + summoner_name,  {
+                return $http.get('http://ancient-hamlet-90384.herokuapp.com/summoners/?name=' + summoner_name,  {
                     params: {api_key: league_api_key}
                 });
             }
@@ -15,7 +15,7 @@ angular
     .factory('matchListFactory', ['$http', function($http) {
         return {
             get : function(summoner_id, league_api_key) {
-                return $http.get('http://localhost:8000/matches/?summoner=' + summoner_id);
+                return $http.get('http://ancient-hamlet-90384.herokuapp.com/matches/?summoner=' + summoner_id);
             }
         }
     }])
@@ -49,7 +49,7 @@ angular
     .factory('kdaFactory', ['$http', function($http) {
         return {
             get : function(champ_name) {
-                return $http.get('http://localhost:8000/matches/hourly-kda/?summoner=' + champ_name);
+                return $http.get('http://localhost:8001/matches/hourly-kda/?summoner=' + champ_name);
             }
         }
     }])
@@ -59,7 +59,7 @@ angular
     .factory('dailyKdaFactory', ['$http', function($http) {
         return {
             get : function(champ_name) {
-                return $http.get('http://localhost:8000/matches/daily-kda/?summoner=' + champ_name);
+                return $http.get('http://ancient-hamlet-90384.herokuapp.com/matches/daily-kda/?summoner=' + champ_name);
             }
         }
     }])

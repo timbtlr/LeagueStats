@@ -7,3 +7,4 @@ pandas==0.17.1
 numpy
 django-cors-headers
 django-filter
+gunicorn
