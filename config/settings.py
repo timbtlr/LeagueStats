@@ -14,9 +14,9 @@ SECRET_KEY = '$h#0mgct=w__vqblrb!1skk^20t&68c_k@(51$b6!8cop0l7d('
 CORS_ORIGIN_ALLOW_ALL = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
