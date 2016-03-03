@@ -29,9 +29,7 @@ def schedule_pull_matches():
 
 
 def pull_matches(summoner_id):
-    print(summoner_id)
     matches = api_client.get_match_list(summoner_id)
-    print(matches)
 
     if matches.get("matches", None):
         for match in matches.get("matches"):
