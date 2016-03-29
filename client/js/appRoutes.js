@@ -22,9 +22,14 @@ angular
             templateUrl: '/templates/champs.html'
         })
 
-        //  KDA view
+        //  Hourly KDA view
         .when('/kda-hour', {
             templateUrl: '/templates/kda_hour.html'
+        })
+
+        //  Daily KDA view
+        .when('/kda-day', {
+            templateUrl: '/templates/kda_day.html'
         })
 
         //  Redirect incorrect navigation to the default (Home) view

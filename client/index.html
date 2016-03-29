@@ -43,28 +43,30 @@
     <body>
         <div class="container">
             <div class="banner-header"></div>
-
             <div ng-controller = "MainController">
-                <div class="col-sm-2">
-                    <a class="side-input-link" href="index.html#/champs">
-                        <div class="side-input-container" data-ng-click="sortCategory('champ-stats')" ng-class="{'active' : isActive('champ-stats')}">
-                            <h4 class="report-option" ng-click="queryForSummonerMatches(summoner)" >
+                <div class="row">
+                    <div class="col-xs-2">
+                        <a class="side-input-link" href="index.html#/champs">
+                            <div class="side-input-container" data-ng-click="sortCategory('champ-stats')" ng-class="{'active' : isActive('champ-stats')}">
                                 Champ Stats
-                            </h4>
-                        </div>
-                    </a>
-                    <a  class="side-input-link" href="index.html#/kda-hour">
-                        <div class="side-input-container"  data-ng-click="sortCategory('hourly-kda')" ng-class="{'active' : isActive('hourly-kda')}">
-                            <h4 class="report-option">
+                            </div>
+                        </a>
+                        <a  class="side-input-link" href="index.html#/kda-hour">
+                            <div class="side-input-container"  data-ng-click="sortCategory('hourly-kda')" ng-class="{'active' : isActive('hourly-kda')}">
                                 Hourly KDA
-                            </h4>
-                        </div>
-                    </a>
-                </div>
+                            </div>
+                        </a>
+                        <a  class="side-input-link" href="index.html#/kda-day">
+                            <div class="side-input-container"  data-ng-click="sortCategory('daily-kda')" ng-class="{'active' : isActive('daily-kda')}">
+                                Daily KDA
+                            </div>
+                        </a>
+                    </div>
 
-                <div class="col-lg-7">
-                    <!-- Angular dynamic content is loaded beyond this point -->
-                    <div ng-view></div>
+                    <div class="col-xs-10">
+                        <!-- Angular dynamic content is loaded beyond this point -->
+                        <div ng-view></div>
+                    </div>
                 </div>
             </div>
         </div>

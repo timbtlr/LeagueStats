@@ -16,11 +16,22 @@
     width: 275px;
 }
 
+.champ-select-link {
+    margin-left: 0;
+    height: 500px;
+    scroll: auto;
+}
+
 .side-input-container {
     padding: 3px 0 3px 0;
     margin: 0;
     text-align: center;
     background: white;
+    cursor: pointer;
+}
+
+.side-buttons {
+    width: 100px;
 }
 
 .side-input-link .side-input-container {
@@ -43,7 +54,7 @@
 }
 
 .champ-table {
-    width: 770px;
+    width: 720px;
     height: 500px;
     overflow: auto;
 }
@@ -59,5 +70,5 @@
 .missing-champ {
     text-align: center;
     width: 780px;
-    font-size: 23px;
+    font-size: 16px;
 }

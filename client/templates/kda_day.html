@@ -1,7 +1,7 @@
 <div class="container" ng-controller = "KdaController">
     <div class="row">
         <div class="col-lg-2">
-            <a class="side-input-link" ng-click="queryForHourlyKda(summoner)" ng-repeat="summoner in summoner_names | toArray | orderBy : 'name'">
+            <a class="side-input-link" ng-click="queryForDailyKda(summoner)" ng-repeat="summoner in summoner_names | toArray | orderBy : 'name'">
                 <div class="side-input-container" data-ng-click="sortCategory(summoner.name)" ng-class="{'active' : isActive(summoner.name)}">
                     {{ summoner.name }}
                 </div>

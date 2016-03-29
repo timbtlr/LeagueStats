@@ -38,12 +38,10 @@ angular
         });
 
         $scope.isActive = function(category) {
-            console.log($scope.category === category)
             return $scope.category === category;
         };
 
         $scope.sortCategory = function(category) {
-            console.log($scope.category)
             $scope.category = category;
         };
 

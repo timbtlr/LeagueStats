@@ -19,6 +19,9 @@ angular.module('KdaControl', [])
             xAxis: {
                 categories: []
             },
+            yAxis: {
+                min: 0
+            },
             series: [
                 {
                     name: 'KDA',
@@ -36,18 +39,17 @@ angular.module('KdaControl', [])
         };
         $scope.summoner_names = [];
         $scope.clicked = false;
+        $scope.category = null
 
         summonerFactory.list().then(function(result) {
             $scope.summoner_names = result.data;
         });
 
         $scope.isActive = function(category) {
-            console.log($scope.category === category)
             return $scope.category === category;
         };
 
         $scope.sortCategory = function(category) {
-            console.log($scope.category)
             $scope.category = category;
         };
 
@@ -56,6 +58,9 @@ angular.module('KdaControl', [])
             $scope.chartOptions.series[0].data = [];
             $scope.chartOptions.series[1].data = [];
             $scope.chartOptions.xAxis.categories = [];
+
+            $scope.chartOptions.title.text = "KDA per Hour of Day";
+            $scope.chartOptions.yAxis.min = 0;
 
             kdaFactory.get(summoner.name).then(function(result) {
                 var kda_info = result.data['KDA'];
@@ -82,12 +87,14 @@ angular.module('KdaControl', [])
             });
         };
 
-        $scope.queryForDailyKda = function(summoner_name) {
+        $scope.queryForDailyKda = function(summoner) {
             $scope.chartOptions.series[0].data = [];
             $scope.chartOptions.series[1].data = [];
             $scope.chartOptions.xAxis.categories = [];
 
-            dailyKdaFactory.get(summoner_name).then(function(result) {
+            $scope.chartOptions.title.text = "KDA per Day of Week";
+
+            dailyKdaFactory.get(summoner.name).then(function(result) {
                 var kda_info = result.data['KDA'];
                 var data = eval(kda_info);
 
@@ -97,6 +104,8 @@ angular.module('KdaControl', [])
                         $scope.chartOptions.xAxis.categories.push(key);
                     }
                 }
+
+                $scope.clicked = true;
             });
         };
 
