@@ -64,6 +64,13 @@ angular
             }
         }
     }])
+    .factory('monthlyKdaFactory', ['$http', 'ENV', function($http, ENV) {
+        return {
+            get : function(summoner_name) {
+                return $http.get(ENV.baseServerUrl + '/matches/monthly-kda/?summoner=' + summoner_name);
+            }
+        }
+    }])
 
 angular
     .module('ChampStatsService', [])

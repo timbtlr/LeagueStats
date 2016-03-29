@@ -32,6 +32,11 @@ angular
             templateUrl: '/templates/kda_day.html'
         })
 
+        //  Monthly KDA view
+        .when('/kda-month', {
+            templateUrl: '/templates/kda_month.html'
+        })
+
         //  Redirect incorrect navigation to the default (Home) view
         .otherwise({ redirectTo: '/' });
 }]);
