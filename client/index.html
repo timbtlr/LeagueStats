@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html ng-app="leagueStatsApp">
+
+    <head lang="en" profile="http://www.w3.org/2005/10/profile">
+        <meta charset="utf-8">
+
+        <title>League Stats</title>
+        <base href="/" />
+
+        <!--  Javascript imports -->
+        <script src="libs/angular/angular.js"></script>
+        <script src="libs/angular-route/angular-route.min.js"></script>
+        <script src="libs/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="libs/highcharts-ng/dist/highcharts-ng.js"></script>
+        <script src="libs/angular-resource/angular-resource.min.js"></script>
+
+        <!--  Angular Application Setup -->
+        <script src="js/envConfig.js"></script> <!-- Environment variable usage -->
+        <script src="js/app.js"></script>
+        <script src="js/appRoutes.js"></script>
+
+        <!--  Controllers -->
+        <script src="js/controllers/main.control.js"></script>
+        <script src="js/controllers/stats.control.js"></script>
+        <script src="js/controllers/kda.control.js"></script>
+
+        <!--  Services -->
+        <script src="js/services/summoner.service.js"></script>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <!-- Custom CSS -->
+        <link href="css/custom.css" rel="stylesheet">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="banner-header"></div>
+
+            <div ng-controller = "MainController">
+                <div class="col-sm-2">
+                    <a class="side-input-link" href="index.html#/champs">
+                        <div class="side-input-container" data-ng-click="sortCategory('champ-stats')" ng-class="{'active' : isActive('champ-stats')}">
+                            <h4 class="report-option" ng-click="queryForSummonerMatches(summoner)" >
+                                Champ Stats
+                            </h4>
+                        </div>
+                    </a>
+                    <a  class="side-input-link" href="index.html#/kda-hour">
+                        <div class="side-input-container"  data-ng-click="sortCategory('hourly-kda')" ng-class="{'active' : isActive('hourly-kda')}">
+                            <h4 class="report-option">
+                                Hourly KDA
+                            </h4>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-7">
+                    <!-- Angular dynamic content is loaded beyond this point -->
+                    <div ng-view></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

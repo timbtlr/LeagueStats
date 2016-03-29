@@ -9,6 +9,7 @@ from champion.models import Champion
 def populate_champions():
     for match in Match.objects.all():
         create_champion(match.champ)
+        sleep(3)
 
 
 def create_champion(champ_id):
@@ -26,6 +27,8 @@ def create_champion(champ_id):
 def schedule_pull_matches():
     for summoner in Summoner.objects.all():
         pull_matches(summoner.id)
+
+    populate_champions()
 
 
 def pull_matches(summoner_id):

@@ -27,15 +27,38 @@ angular
         };
     })
     .controller('StatsController', function($scope, summonerFactory, matchListFactory, matchFactory, championFactory) {
+        $scope.summoner_names = []
         $scope.summoner_info = {}
-        $scope.champ_summary = {}
+        $scope.champ_summary = []
+        $scope.clicked = false;
+        $scope.category = null;
 
-        $scope.queryForSummonerMatches = function(summoner_name) {
-            summonerFactory.get(summoner_name, $scope.api_key).then(function(result) {
-                $scope.summoner_info = result.data[0];
-                matchListFactory.get($scope.summoner_info['id'], $scope.api_key).then(function(result) {
+        summonerFactory.list().then(function(result) {
+            $scope.summoner_names = result.data;
+        });
+
+        $scope.isActive = function(category) {
+            console.log($scope.category === category)
+            return $scope.category === category;
+        };
+
+        $scope.sortCategory = function(category) {
+            console.log($scope.category)
+            $scope.category = category;
+        };
+
+
+        $scope.queryForSummonerMatches = function(summoner) {
+            $scope.clicked = true;
+            $scope.errorMessage = null;
+            $scope.error = null;
+
+            matchListFactory.get(summoner['id']).then(function(result) {
+                if (result.data.length > 0) {
                     $scope.process_match_list(result.data);
-                });
+                } else {
+                    $scope.champ_summary = []
+                };
             });
         };
 

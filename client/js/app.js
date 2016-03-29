@@ -1,14 +1,3 @@
-/*
-Name:
-    app.js
-
-Description:
-    Defines the main application module for the Inventory Management application along with all application
-    dependencies.
-
-Author:
-    Tim "KetsuN" Butler
-*/
 'use strict';
 
 angular
@@ -16,13 +5,20 @@ angular
         'ui.bootstrap',
         'ngRoute',
         'appRoutes',
+        'ngResource',
         'highcharts-ng',
+        'MainControl',
         'StatsControl',
         'KdaControl',
         'KdaService',
         'DailyKdaService',
+        'ChampStatsService',
         'SummonerService',
         'MatchListService',
         'MatchService',
-        'ChampionService'
-    ]);
+        'ChampionService',
+        'envConfig'
+    ])
+    .config(function($resourceProvider) {
+        $resourceProvider.defaults.stripTrailingSlashes = false;
+    });

@@ -1,32 +1,33 @@
 angular
     .module('SummonerService', [])
-    .factory('summonerFactory', ['$http', function($http) {
+    .factory('summonerFactory', ['$http', 'ENV', function($http, ENV) {
         return {
-            get : function(summoner_name, league_api_key) {
-                return $http.get('http://ancient-hamlet-90384.herokuapp.com/summoners/?name=' + summoner_name,  {
-                    params: {api_key: league_api_key}
-                });
+            get : function(summoner_name) {
+                return $http.get(ENV.baseServerUrl + '/summoners/?name=' + summoner_name);
+            },
+            list : function() {
+                return $http.get(ENV.baseServerUrl + '/summoners/');
             }
         }
     }])
 
 angular
     .module('MatchListService', [])
-    .factory('matchListFactory', ['$http', function($http) {
+    .factory('matchListFactory', ['$http', 'ENV', function($http, ENV) {
         return {
-            get : function(summoner_id, league_api_key) {
-                return $http.get('http://ancient-hamlet-90384.herokuapp.com/matches/?summoner=' + summoner_id);
+            get : function(summoner_id) {
+                return $http.get(ENV.baseServerUrl + '/matches/?summoner=' + summoner_id);
             }
         }
     }])
 
 angular
     .module('MatchService', [])
-    .factory('matchFactory', ['$http', function($http) {
+    .factory('matchFactory', ['$http', 'ENV', function($http, ENV) {
         return {
-            get : function(match_id, league_api_key) {
+            get : function(match_id) {
                 return $http.get('https://na.api.pvp.net/api/lol/na/v2.2/match/' + match_id,  {
-                    params: {api_key: league_api_key}
+                    params: {api_key: ENV.leagueApiKey}
                 });
             }
         }
@@ -34,11 +35,11 @@ angular
 
 angular
     .module('ChampionService', [])
-    .factory('championFactory', ['$http', function($http) {
+    .factory('championFactory', ['$http', 'ENV', function($http, ENV) {
         return {
-            get : function(champ_id, league_api_key) {
+            get : function(champ_id) {
                 return $http.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/' + champ_id + '?champData=image',  {
-                    params: {api_key: league_api_key}
+                    params: {api_key: ENV.leagueApiKey}
                 });
             }
         }
@@ -46,20 +47,30 @@ angular
 
 angular
     .module('KdaService', [])
-    .factory('kdaFactory', ['$http', function($http) {
+    .factory('kdaFactory', ['$http', 'ENV', function($http, ENV) {
         return {
-            get : function(champ_name) {
-                return $http.get('http://localhost:8001/matches/hourly-kda/?summoner=' + champ_name);
+            get : function(summoner_name) {
+                return $http.get(ENV.baseServerUrl + '/matches/hourly-kda/?summoner=' + summoner_name);
             }
         }
     }])
 
 angular
     .module('DailyKdaService', [])
-    .factory('dailyKdaFactory', ['$http', function($http) {
+    .factory('dailyKdaFactory', ['$http', 'ENV', function($http, ENV) {
         return {
-            get : function(champ_name) {
-                return $http.get('http://ancient-hamlet-90384.herokuapp.com/matches/daily-kda/?summoner=' + champ_name);
+            get : function(summoner_name) {
+                return $http.get(ENV.baseServerUrl + '/matches/daily-kda/?summoner=' + summoner_name);
+            }
+        }
+    }])
+
+angular
+    .module('ChampStatsService', [])
+    .factory('champStatsFactory', ['$http', 'ENV', function($http, ENV) {
+        return {
+            get : function(summoner_name) {
+                return $http.get('http://localhost:8001/matches/champion-stats/?summoner=' + summoner_name);
             }
         }
     }])

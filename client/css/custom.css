@@ -1,168 +1,63 @@
-.content {
-    margin: auto;
-    width: 1275px;
-    background-color: white;
+.container {
+    width: 1200px;
 }
 
-.page-header {
+.content-column {
+    margin-top: 40px;
+}
+
+.banner-header {
+    background-image: url('../img/LeagueStatsBanner.png');
+    height: 250px;
+    margin: 0 0 15px 0;
+}
+
+.input-box {
+    width: 275px;
+}
+
+.side-input-container {
+    padding: 3px 0 3px 0;
+    margin: 0;
     text-align: center;
-    font-size: 36px !important;
+    background: white;
 }
 
-h1 {
-    font-family: 'Dancing Script', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 800;
-}
-
-.emphasized-subheading {
-    padding-top: 5px;
-    font-size: 40px;
-}
-
-
-.home-link {
-    text-decoration: none !important;
-}
-
-.home-icon {
-    max-height: 100px;
-    max-width: 100px;
-    display: block;
-    margin: auto;
-    cursor: pointer;
-    cursor: hand;
-}
-
-.home-descriptor {
-    height: 300px;
-}
-
-.home-descriptor .descriptor-title {
-    display: block;
-    margin: auto;
-    padding-bottom: 5px;
-    font-size: 30px;
-}
-
-.home-descriptor h3,p {
-    padding-top: 10px;
-    margin: auto;
-    text-align: center;
-}
-
-.custom-navlink {
+.side-input-link .side-input-container {
+    text-decoration: none;
     font-weight: bold;
 }
 
-.nav-rsvp {
-    border-radius: 5px;
-    color: white !important;
-    font-size: 18px;
-    background-color: #be1e2d;
+.side-input-link .side-input-container:hover,
+.side-input-link .side-input-container.active {
+    background: #e6f3ff;
 }
 
-.nav-rsvp:hover {
-    color: #1edec1 !important;
-    background-color: #be1e2d !important;
-}
-
-.nav-rsvp .nav li a {
-    font-size: 18px !important;
-}
-
-.github-links {
-    font-size: 10px;
-}
-
-.thumbnail-container {
-    width: 225px;
-    height: 150px;
-    overflow: hidden;
-}
-
-.photo-thumbnail {
-    width: 100%;
-    padding-top: 10px;
-}
-
-.popup-container{
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    top: 0%;
-    left: 0%;
-    z-index: 40002;
-    background-color: rgba(255,255,255,0.8);
-}
-
-.photo-display {
-    width: 60%;
-    height: 80%;
-    position: relative;
-    margin: auto;
-    margin-top: 3%;
-    padding: 10px;
-    background-color: white;
-    border-radius: 10px;
-    border: 2px solid darkgrey;
-}
-
-.photo-display img {
-    display: block;
-    margin: auto;
-    max-width: 92%;
-    max-height: 95%;
-}
-
-.next-photo-arrow,
-.previous-photo-arrow {
-    position: absolute;
-    top: 10px;
-    height: 90%;
-    width: 20px;
-    z-index: 40003;
-}
-
-.next-photo-arrow {
-    right: 12px;
-}
-
-.previous-photo-arrow {
-    left: 12px;
-}
-
-.next-photo-arrow img,
-.previous-photo-arrow img {
-    position: absolute;
-    max-width: 100%;
-    display: block;
-    margin: auto;
-    bottom: 0px;
-    cursor: pointer;
-}
-
-.image-caption {
-    height: 15px;
-    font-size: 14px;
-}
-
-.close-image {
-    height: 10px;
-    font-size: 12px;
+.side-input-link:hover {
+    text-decoration: none;
     font-weight: bold;
-    padding-top: 5px;
+}
+
+.report-option {
     cursor: pointer;
-    width: 100px;
 }
 
-.image-caption,
-.close-image {
+.champ-table {
+    width: 770px;
+    height: 500px;
+    overflow: auto;
+}
+
+.champ-name {
+    width: 70%;
+}
+
+.champ-value {
+    width: 15%;
+}
+
+.missing-champ {
     text-align: center;
-    display: block;
-    margin: auto;
-    bottom: 0px;
-}
-
-.close-image:hover {
-    color: #de1e2c;
+    width: 780px;
+    font-size: 23px;
 }

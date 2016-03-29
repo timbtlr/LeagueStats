@@ -1,8 +1,20 @@
 <div class="container" ng-controller = "KdaController">
-  <div>
-      Summoner Name:  <input type="text" ng-model="summoner" /><br />
-      <input type="submit" ng-click="queryForHourlyKda(summoner)" value="Query Hourly KDA" />
-      <input type="submit" ng-click="queryForDailyKda(summoner)" value="Query Daily KDA" />
-  </div>
-  <highchart id="chart1" config="chartOptions" class="span1"></highchart>
+    <div class="row">
+        <div class="col-lg-2">
+            <a class="side-input-link" ng-click="queryForHourlyKda(summoner)" ng-repeat="summoner in summoner_names | toArray | orderBy : 'name'">
+                <div class="side-input-container" data-ng-click="sortCategory(summoner.name)" ng-class="{'active' : isActive(summoner.name)}">
+                    <h4 class="report-option">
+                        {{ summoner.name }}
+                    </h4>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-6">
+            <highchart ng-if="chartOptions.series[0].data != 0" id="chart1" config="chartOptions" class="span1"></highchart>
+            <div ng-if="chartOptions.series[0].data == 0 && clicked" class="missing-champ">
+                No ranked games available for this summoner
+            </div>
+        </div>
+    </div>
 </div>

@@ -10,11 +10,16 @@ Author:
 */
 angular
     .module('appRoutes', [])
-    .config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
+    .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider
         //  Home view
         .when('/', {
             templateUrl: '/templates/main.html'
+        })
+
+        //  Champs view
+        .when('/champs', {
+            templateUrl: '/templates/champs.html'
         })
 
         //  KDA view
@@ -24,9 +29,4 @@ angular
 
         //  Redirect incorrect navigation to the default (Home) view
         .otherwise({ redirectTo: '/' });
-
-    $httpProvider.defaults.useXDomain = true;
-    delete $httpProvider.defaults.headers.common['X-Requested-With'];
-
-    $locationProvider.html5Mode(true);
 }]);

@@ -1,16 +1,11 @@
-<div class="container" ng-controller = "StatsController">
-    <div>
-        Summoner Name:  <input type="text" ng-model="summoner" /><br />
-        League API Key: <input type="text" ng-model="api_key" /><br />
-        <input type="submit" ng-click="queryForSummonerMatches(summoner)" value="Query Ranked Matches" />
-    </div>
-    <div>
-        <a href = "/kda-hour">Go to the KDA Chart</a>
-    </div>
-    <div>
-        <div ng-repeat="champ in champ_summary | toArray | orderBy : '-kda'">
-            <img style="height: 40px; width: 40px;"ng-src="{{champ.image_url}}" />
-            <span ng-champ-display />
+<div>
+    <div class="row">
+        <div class="col-lg-1">
+        </div>
+        <div class="col-lg-10">
+            <h3>
+                Choose a report type on the left to get started
+            </h3>
         </div>
     </div>
 </div>
