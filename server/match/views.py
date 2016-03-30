@@ -27,7 +27,10 @@ class MatchViewSet(viewsets.ModelViewSet):
 
         timestamps = []
         kdas = []
-        win = []
+        wins = []
+        kills = []
+        assists = []
+        deaths = []
 
         for match in matches.iterator():
             timestamps.append(match.timestamp.hour + 1)
@@ -35,24 +38,17 @@ class MatchViewSet(viewsets.ModelViewSet):
                 kdas.append(float(match.kills + match.assists) / match.deaths)
             else:
                 kdas.append(float(match.kills + match.assists))
-            win.append(int(match.win))
+            wins.append(int(match.win))
+            kills.append(int(match.kills))
+            assists.append(int(match.deaths))
+            deaths.append(int(match.assists))
 
-        frame = pd.DataFrame(
-            {
-                "Hour": timestamps,
-                "KDA": kdas,
-                "Win": win
-            }
+        norm_result = self.normalize_kda_data(
+            timestamps, kdas, wins, kills, deaths, assists, range(1, 25)
         )
 
-        kda_groupings = frame.groupby(['Hour']).aggregate(np.mean)
-        kda_groupings = kda_groupings.reindex(range(1, 25), fill_value=0)
-        cols_to_norm = ['KDA', 'Win']
-        kda_groupings[cols_to_norm] = kda_groupings[cols_to_norm].apply(lambda x: (x - x.min()) / (x.max() - x.min()))
-        json_result = kda_groupings.to_json()
-
         return Response(
-            data=json.loads(json_result),
+            data=norm_result,
             status=200
         )
 
@@ -65,30 +61,28 @@ class MatchViewSet(viewsets.ModelViewSet):
 
         timestamps = []
         kdas = []
-        win = []
+        wins = []
+        kills = []
+        assists = []
+        deaths = []
 
         for match in matches.iterator():
-            timestamps.append(match.timestamp.weekday())
+            timestamps.append(match.timestamp.weekday() + 1)
             if match.deaths > 0:
                 kdas.append(float(match.kills + match.assists) / match.deaths)
             else:
                 kdas.append(float(match.kills + match.assists))
-            win.append(int(match.win))
+            wins.append(int(match.win))
+            kills.append(int(match.kills))
+            assists.append(int(match.deaths))
+            deaths.append(int(match.assists))
 
-        frame = pd.DataFrame({
-            "Day": timestamps,
-            "KDA": kdas,
-            "Win": win
-        })
-
-        kda_groupings = frame.groupby(['Day']).aggregate(np.mean)
-        kda_groupings = kda_groupings.reindex(range(1, 8), fill_value=0)
-        cols_to_norm = ['KDA', 'Win']
-        kda_groupings[cols_to_norm] = kda_groupings[cols_to_norm].apply(lambda x: (x - x.min()) / (x.max() - x.min()))
-        json_result = kda_groupings.to_json()
+        norm_result = self.normalize_kda_data(
+            timestamps, kdas, wins, kills, deaths, assists, range(1, 8)
+        )
 
         return Response(
-            data=json.loads(json_result),
+            data=norm_result,
             status=200
         )
 
@@ -101,7 +95,10 @@ class MatchViewSet(viewsets.ModelViewSet):
 
         timestamps = []
         kdas = []
-        win = []
+        wins = []
+        kills = []
+        assists = []
+        deaths = []
 
         for match in matches.iterator():
             timestamps.append(match.timestamp.month)
@@ -109,89 +106,36 @@ class MatchViewSet(viewsets.ModelViewSet):
                 kdas.append(float(match.kills + match.assists) / match.deaths)
             else:
                 kdas.append(float(match.kills + match.assists))
-            win.append(int(match.win))
+            wins.append(int(match.win))
+            kills.append(int(match.kills))
+            assists.append(int(match.deaths))
+            deaths.append(int(match.assists))
 
+        norm_result = self.normalize_kda_data(
+            timestamps, kdas, wins, kills, deaths, assists, range(1, 13)
+        )
+
+        return Response(
+            data=norm_result,
+            status=200
+        )
+
+    def normalize_kda_data(self, times, kdas, wins, kills, deaths, assists,
+                           index_range):
         frame = pd.DataFrame({
-            "Month": timestamps,
+            "Month": times,
             "KDA": kdas,
-            "Win": win
+            "Win": wins,
+            "Kills": kills,
+            "Deaths": deaths,
+            "Assists": assists
         })
 
         kda_groupings = frame.groupby(['Month']).aggregate(np.mean)
-        kda_groupings = kda_groupings.reindex(range(1, 13), fill_value=0)
-        cols_to_norm = ['KDA', 'Win']
-        kda_groupings[cols_to_norm] = kda_groupings[cols_to_norm].apply(lambda x: (x - x.min()) / (x.max() - x.min()))
-        json_result = kda_groupings.to_json()
-
-        return Response(
-            data=json.loads(json_result),
-            status=200
+        kda_groupings = kda_groupings.reindex(index_range, fill_value=0)
+        cols_to_norm = ['KDA', 'Win', 'Kills', 'Deaths', 'Assists']
+        kda_groupings[cols_to_norm] = kda_groupings[cols_to_norm].apply(
+            lambda x: (x - x.min()) / (x.max() - x.min())
         )
-
-    @list_route(methods=['get'], url_path='champion-stats')
-    def champion_stats(self, request, pk=None):
-        params = request.query_params
-        summoner_name = params.get("summoner")
-
-        if not summoner_name:
-            return Response(
-                data={
-                    "status": 400,
-                    "detail": "You must provide a summoner name with this query"
-                },
-                status=400
-            )
-
-        summoner = Summoner.objects.get(name=summoner_name)
-        matches = Match.objects.filter(summoner=summoner)
-
-        champ = []
-        kills = []
-        deaths = []
-        assists = []
-        kdas = []
-        gold = []
-        damage = []
-
-        for match in matches.iterator():
-            champ.append(Champion.objects.get(id=match.champ).name)
-            kills.append(match.kills)
-            deaths.append(match.deaths)
-            assists.append(match.assists)
-            if match.deaths > 0:
-                kdas.append(float(match.kills + match.assists) / match.deaths)
-            else:
-                kdas.append(float(match.kills + match.assists))
-            gold.append(match.gold_earned)
-            damage.append(match.damage_dealt)
-
-        frame = pd.DataFrame({
-            "Champion": champ,
-            "KDA": kdas,
-            "Kills": kills,
-            "Deaths": deaths,
-            "Assists": assists,
-            "Gold": gold,
-            "Damage": damage
-        })
-
-        kda_groupings = frame.groupby(['Champion']).aggregate(np.mean)
-        kda_groupings = kda_groupings.sort_values(by=['KDA'], ascending=[False])
         json_result = kda_groupings.to_json()
-        json_result = json.loads(json_result)
-
-        print(kda_groupings)
-        print(json_result)
-
-        keys = json_result['Gold'].keys()
-
-        list_result = {}
-        for key in keys:
-            list_result[key]['Gold'] = json_result['Gold'].get(key)
-
-        print(list_result)
-
-        return Response(
-            data=json.loads(list_result),
-            status=200
-        )
+        return json.loads(json_result)

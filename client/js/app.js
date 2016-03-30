@@ -7,6 +7,7 @@ angular
         'appRoutes',
         'ngResource',
         'highcharts-ng',
+        'SummonerControl',
         'MainControl',
         'StatsControl',
         'KdaControl',

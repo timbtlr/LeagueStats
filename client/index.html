@@ -22,6 +22,7 @@
 
         <!--  Controllers -->
         <script src="js/controllers/main.control.js"></script>
+        <script src="js/controllers/summoner.control.js"></script>
         <script src="js/controllers/stats.control.js"></script>
         <script src="js/controllers/kda.control.js"></script>
 
@@ -46,6 +47,11 @@
             <div ng-controller = "MainController">
                 <div class="row">
                     <div class="col-xs-2">
+                        <a class="side-input-link" href="index.html#/summoners">
+                            <div class="side-input-container" data-ng-click="sortCategory('summoner-stats')" ng-class="{'active' : isActive('summoner-stats')}">
+                                Summoner Stats
+                            </div>
+                        </a>
                         <a class="side-input-link" href="index.html#/champs">
                             <div class="side-input-container" data-ng-click="sortCategory('champ-stats')" ng-class="{'active' : isActive('champ-stats')}">
                                 Champ Stats

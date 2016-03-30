@@ -18,6 +18,11 @@ angular
         })
 
         //  Champs view
+        .when('/summoners', {
+            templateUrl: '/templates/summoner.html'
+        })
+
+        //  Champs view
         .when('/champs', {
             templateUrl: '/templates/champs.html'
         })
