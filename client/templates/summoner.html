@@ -1,0 +1,15 @@
+<div class="container" ng-controller = "SummonerController">
+    <div class="row">
+        <div class="col-md-2 champ-select-link">
+            <a class="side-input-link" ng-click="editChart(summoner)" ng-repeat="summoner in summonerStats | toArray | orderBy : 'name'" >
+                <div class="side-input-container" data-ng-click="sortCategory(summoner.name)" ng-class="{'active' : isActive(summoner.name)}">
+                    {{ summoner.name }}
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-6">
+            <highchart ng-if="chartOptions.series[0].data != 0" id="chart1" config="chartOptions" class="span1"></highchart>
+        </div>
+    </div>
+</div>

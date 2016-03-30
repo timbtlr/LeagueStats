@@ -10,6 +10,13 @@ angular
             }
         }
     }])
+    .factory('summonerStatsFactory', ['$http', 'ENV', function($http, ENV) {
+        return {
+            get : function(summoner_pk) {
+                return $http.get(ENV.baseServerUrl + '/summoners/' + summoner_pk + '/stats/');
+            }
+        }
+    }])
 
 angular
     .module('MatchListService', [])
