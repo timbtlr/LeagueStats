@@ -1,0 +1,10 @@
+version: '2'
+services:
+  base:
+      build: .
+      env_file: .env
+      volumes:
+        - .:/code
+      environment:
+        - SECRET_KEY=bla
+        - DEBUG=True

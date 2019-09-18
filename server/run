@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+
+envtpl --keep-template --allow-missing -o /code/uwsgi.ini  /code/uwsgi.ini.tpl
+
+python app/manage.py migrate
+exec uwsgi --ini /code/uwsgi.ini

@@ -1,0 +1,13 @@
+version: '2'
+services:
+  bot:
+    build: .
+    command: "python bot.py"
+    env_file: .env
+    volumes:
+      - .:/code
+    networks:
+      - botnet
+networks:
+  botnet:
+    driver: bridge

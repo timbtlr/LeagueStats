@@ -1,0 +1,13 @@
+version: '2'
+services:
+  worker:
+    extends:
+      file: common-compose.yml
+      service: base
+  api:
+    command: run
+    ports:
+      - "5000:80"
+    extends:
+      file: common-compose.yml
+      service: base
