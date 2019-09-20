@@ -19,13 +19,12 @@ class SummonerViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend, )
     filter_fields = ('name', )
 
-    def create(self, request):
-        summoner_name = request.data.get("summoner")
+    def create_by_name(self, summoner_name):
         summoner_data = api_client.get_summoner_info(summoner_name)
 
         try:
             summoner = Summoner.objects.get(id=summoner_data.get("id"))
-            created = False
+            return summoner, False
         except Summoner.DoesNotExist:
             summoner = Summoner(
                 name=summoner_name,
@@ -34,7 +33,11 @@ class SummonerViewSet(viewsets.ModelViewSet):
                 puuid=summoner_data.get("puuid"),
                 level=summoner_data.get("summonerLevel")
             )
-            created = True
+            return summoner, True
+
+    def create(self, request):
+        summoner_name = request.data.get("summoner")
+        summoner, created = self.create_by_name(summoner_name)
 
         summoner_serializer = SummonerSerializer(instance=summoner)
         if created:
@@ -100,7 +103,12 @@ class SummonerViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['post'])
     def bans(self, request, pk=None):
-        summoner = Summoner.objects.get(name__iexact=pk)
+        try:
+            summoner = Summoner.objects.get(name__iexact=pk)
+        except Summoner.DoesNotExist:
+            summoner, created = self.create_by_name(summoner_name)
+            return Response("No games on record for this summoner.  Check back in 30 minutes after games populate.", status=404)
+
         try:
             champ = Champion.objects.get(name__iexact=request.data.get("champ"))
         except Champion.DoesNotExist:
@@ -160,9 +168,14 @@ class SummonerViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['post'])
     def recent(self, request, pk=None):
-        summoner = Summoner.objects.get(name__iexact=pk)
+        try:
+            summoner = Summoner.objects.get(name__iexact=pk)
+        except Summoner.DoesNotExist:
+            summoner, created = self.create_by_name(summoner_name)
+            return Response("No games on record for this summoner.  Check back in 30 minutes after games populate.", status=404)
+
         count = int(request.data.get("count") or 3)
-        matches = Match.objects.filter(summoner__pk=summoner.pk)
+        matches = Match.objects.filter(summoner__pk=summoner.pk).order_by("-timestamp")
 
         response = [MatchSerializer(m).data for m in matches[:count]]
         return Response(
