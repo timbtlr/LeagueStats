@@ -1,7 +1,0 @@
-version: '2'
-services:
-  base:
-      build: .
-      env_file: .env
-      volumes:
-        - .:/code

@@ -55,6 +55,4 @@ async def summoner_recent(ctx, summoner, count=3):
     message += "```"
     await ctx.send(message)
 
-
-
 bot.run(TOKEN)

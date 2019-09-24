@@ -1,13 +1,12 @@
-version: '2'
+version: '2.2'
 services:
   bot:
     build: .
-    command: "python bot.py"
+    command: ["python", "bot.py"]
     env_file: .env
     volumes:
       - .:/code
-    networks:
-      - botnet
-networks:
-  botnet:
-    driver: bridge
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8087:8087"
