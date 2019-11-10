@@ -8,7 +8,7 @@ class Match(models.Model):
     League of Legends Match Model.
     Contains a foreign key to a summoner.
     """
-    id = models.CharField(primary_key=True, max_length=255)
+    match_id = models.CharField(max_length=255, default=0)
     summoner = models.ForeignKey(Summoner)
     mode = models.CharField(max_length=100, null=True, blank=True)
     game_type = models.CharField(max_length=255, null=True, blank=True)

@@ -51,7 +51,7 @@ def pull_matches(account_id, begin_index=0, begin_timestamp=None):
                 champ = create_champion(champ_id)
 
                 try:
-                    Match.objects.get(id=match_id, summoner__id=account_id)
+                    Match.objects.get(match_id=match_id, summoner__id=account_id)
                 except Match.DoesNotExist:
                     match_data = api_client.get_match(match_id)
                     match = create_match(account_id, match_time, champ_id, match_data)
@@ -72,7 +72,7 @@ def create_match(account_id, match_time, champ_id, match_data):
             for participant in match_data.get("participants"):
                 if participant.get("participantId") == participant_id:
                     participant_stats = participant.get("stats", {})
-                    match = Match(id=match_data.get("gameId"))
+                    match = Match(match_id=match_data.get("gameId"))
                     match.timestamp = datetime.datetime.fromtimestamp(int(match_time / 1000 - 18000)).replace(tzinfo=timezone.utc)
                     match.summoner = Summoner.objects.get(id=account_id)
                     match.mode = match_data["gameMode"]
