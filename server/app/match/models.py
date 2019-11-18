@@ -3,10 +3,14 @@ from champion.models import Champion
 from summoner.models import Summoner
 from match.constants import MATCH_MODE_TYPE, MATCH_QUEUE_TYPE
 
-class Match(models.Model):
+class MatchPerformance(models.Model):
     """
-    League of Legends Match Model.
-    Contains a foreign key to a summoner.
+    Match model.  Contains minimal information about the performance of a specific summoner
+    within an individual match of League of Legends.  
+
+    Since this model represents summoner performance in a match and not the totality of the match itself,
+    single match IDs are not unique by themselves.  The match_id + foreign key to a summoner object are 
+    unique together.
     """
     match_id = models.CharField(max_length=255, default=0)
     summoner = models.ForeignKey(Summoner)
@@ -43,3 +47,6 @@ class Match(models.Model):
     
     def __str__(self):
         return f"{self.summoner.name} ({self.mode} / {self.game_type} / {self.timestamp})"
+
+    class Meta:
+        unique_together = ['match_id', 'summoner']

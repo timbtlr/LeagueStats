@@ -1,19 +1,22 @@
 from collections import Counter 
 
 from rest_framework import viewsets
+from summoner.helpers import fill_data_frame, normalize_kda_data
 from summoner.models import Summoner
 from summoner.serializers import SummonerSerializer
 from rest_framework import filters
 from api_client.league_client import api_client
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
-from match.models import Match
+from match.models import MatchPerformance
 from match.serializers import MatchSerializer
 from champion.models import Champion
 
 
 class SummonerViewSet(viewsets.ModelViewSet):
-    """ ViewSet for viewing and editing summoner objects """
+    """ 
+    ViewSet for viewing and editing summoner objects 
+    """
     queryset = Summoner.objects.all()
     serializer_class = SummonerSerializer
     filter_backends = (filters.DjangoFilterBackend, )
@@ -51,7 +54,7 @@ class SummonerViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'])
     def stats(self, request, pk=None):
         summoner = Summoner.objects.get(name__iexact=pk)
-        matches = Match.objects.filter(summoner=summoner)
+        matches = MatchPerformance.objects.filter(summoner=summoner)
 
         wins = 0
         kills = 0
@@ -114,7 +117,7 @@ class SummonerViewSet(viewsets.ModelViewSet):
         except Champion.DoesNotExist:
             return Response("No games played as this champion", status=404)
 
-        matches = Match.objects.filter(summoner__pk=summoner.pk, champ=champ.pk, mode="CLASSIC")
+        matches = MatchPerformance.objects.filter(summoner__pk=summoner.pk, champ=champ.pk, mode="CLASSIC")
         role = request.data.get("role")
         if role:
             matches = matches.filter(lane__icontains=f"{role.upper()}")
@@ -175,10 +178,66 @@ class SummonerViewSet(viewsets.ModelViewSet):
             return Response("No games on record for this summoner.  Check back in 30 minutes after games populate.", status=404)
 
         count = int(request.data.get("count") or 3)
-        matches = Match.objects.filter(summoner__pk=summoner.pk).order_by("-timestamp")
+        matches = MatchPerformance.objects.filter(summoner__pk=summoner.pk).order_by("-timestamp")
 
         response = [MatchSerializer(m).data for m in matches[:count]]
         return Response(
             data=response,
+            status=200
+        )
+
+    
+
+
+    @detail_route(methods=['get'], url_path='hourly-kda')
+    def hourly_kda(self, request, pk):
+        """
+        Return average KDA for a summoner broken down hourly.  Results
+        are mormalized between 0 and 1.
+        """
+        summoner = Summoner.objects.get(name__iexact=pk)
+        matches = MatchPerformance.objects.filter(summoner=summoner)
+
+        data_frame = fill_data_frame(matches, "%H")
+        norm_result = normalize_kda_data(data_frame, range(1, 25))
+
+        return Response(
+            data=norm_result,
+            status=200
+        )
+
+    @detail_route(methods=['get'], url_path='daily-kda')
+    def daily_kda(self, request, pk):
+        """
+        Return average KDA for a summoner broken down by day of the week.  Results
+        are mormalized between 0 and 1.
+        """
+        summoner = Summoner.objects.get(name__iexact=pk)
+        matches = MatchPerformance.objects.filter(summoner=summoner)
+
+        data_frame = fill_data_frame(matches, "%w")
+        norm_result = normalize_kda_data(data_frame, range(1, 8))
+
+        return Response(
+            data=norm_result,
+            status=200
+        )
+
+    @detail_route(methods=['get'], url_path='monthly-kda')
+    def monthly_kda(self, request, pk):
+        """
+        Return average KDA for a summoner broken down by month of the year.  Results
+        are mormalized between 0 and 1.
+
+        value
+        """
+        summoner = Summoner.objects.get(name__iexact=pk)
+        matches = MatchPerformance.objects.filter(summoner=summoner)
+
+        data_frame = fill_data_frame(matches, "%-m")
+        norm_result = normalize_kda_data(data_frame, range(1, 13))
+
+        return Response(
+            data=norm_result,
             status=200
         )

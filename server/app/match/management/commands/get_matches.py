@@ -1,8 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
-from match.tasks import schedule_pull_matches
+from match.tasks import collect_all_new_matches
 
 class Command(BaseCommand):
     help = 'Starts a task to pull match data for all summoners'
 
     def handle(self, *args, **options):
-        schedule_pull_matches()
+        collect_all_new_matches()
