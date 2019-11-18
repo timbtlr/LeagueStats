@@ -115,7 +115,7 @@ class SummonerViewSet(viewsets.ModelViewSet):
         try:
             champ = Champion.objects.get(name__iexact=request.data.get("champ"))
         except Champion.DoesNotExist:
-            return Response("No games played as this champion", status=404)
+            return Response("The provided champion does not exist in the database.", status=404)
 
         matches = MatchPerformance.objects.filter(summoner__pk=summoner.pk, champ=champ.pk, mode="CLASSIC")
         role = request.data.get("role")
@@ -123,12 +123,11 @@ class SummonerViewSet(viewsets.ModelViewSet):
             matches = matches.filter(lane__icontains=f"{role.upper()}")
 
         if not matches:
-            return Response("No games played as this champion", status=404)
-
-        opposing_champs = matches.values_list("opposing_champ", flat=True)
+            return Response(f"{cummoner.name} has not played any classic matches played as this champion", status=404)
 
         bans = {}
         nevers = {}
+        opposing_champs = matches.values_list("opposing_champ", flat=True)
         for opponent in opposing_champs:
             try:
                 pct = float(matches.filter(win=True, opposing_champ=opponent).count()) / float(matches.filter(opposing_champ=opponent).count()) * 100.0
@@ -169,15 +168,20 @@ class SummonerViewSet(viewsets.ModelViewSet):
             status=200
         )
 
-    @detail_route(methods=['post'])
+    @detail_route(methods=['get'])
     def recent(self, request, pk=None):
+        """
+        Return the most recent matches for a summoner.  Defaults to 3 matches but the number of 
+        matches returned can be provided as a query param `count`.
+        """
         try:
             summoner = Summoner.objects.get(name__iexact=pk)
         except Summoner.DoesNotExist:
             summoner, created = self.create_by_name(summoner_name)
             return Response("No games on record for this summoner.  Check back in 30 minutes after games populate.", status=404)
 
-        count = int(request.data.get("count") or 3)
+        params = request.query_params
+        count = int(params.get("count") or 3)
         matches = MatchPerformance.objects.filter(summoner__pk=summoner.pk).order_by("-timestamp")
 
         response = [MatchSerializer(m).data for m in matches[:count]]
@@ -186,14 +190,10 @@ class SummonerViewSet(viewsets.ModelViewSet):
             status=200
         )
 
-    
-
-
     @detail_route(methods=['get'], url_path='hourly-kda')
     def hourly_kda(self, request, pk):
         """
-        Return average KDA for a summoner broken down hourly.  Results
-        are mormalized between 0 and 1.
+        Return average KDA for a summoner broken down hourly.
         """
         summoner = Summoner.objects.get(name__iexact=pk)
         matches = MatchPerformance.objects.filter(summoner=summoner)
@@ -209,8 +209,7 @@ class SummonerViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'], url_path='daily-kda')
     def daily_kda(self, request, pk):
         """
-        Return average KDA for a summoner broken down by day of the week.  Results
-        are mormalized between 0 and 1.
+        Return average KDA for a summoner broken down by day of the week.
         """
         summoner = Summoner.objects.get(name__iexact=pk)
         matches = MatchPerformance.objects.filter(summoner=summoner)
@@ -226,10 +225,7 @@ class SummonerViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'], url_path='monthly-kda')
     def monthly_kda(self, request, pk):
         """
-        Return average KDA for a summoner broken down by month of the year.  Results
-        are mormalized between 0 and 1.
-
-        value
+        Return average KDA for a summoner broken down by month of the year.
         """
         summoner = Summoner.objects.get(name__iexact=pk)
         matches = MatchPerformance.objects.filter(summoner=summoner)

@@ -57,8 +57,5 @@ def normalize_kda_data(data_frame, index_range):
     kda_groupings = frame.groupby(['Time']).aggregate(np.mean)
     kda_groupings = kda_groupings.reindex(index_range, fill_value=0)
     cols_to_norm = ['KDA', 'Win', 'Kills', 'Deaths', 'Assists']
-    kda_groupings[cols_to_norm] = kda_groupings[cols_to_norm].apply(
-        lambda x: (x - x.min()) / (x.max() - x.min())
-    )
     json_result = kda_groupings.to_json()
     return json.loads(json_result)
