@@ -7,8 +7,6 @@ TOKEN = os.environ.get("DISCORD_TOKEN")
 GUILD = os.environ.get("DISCORD_GUILD")
 STATS_API = os.environ.get("LEAGUE_STATS_API_URL")
 
-
-
 bot = commands.Bot(command_prefix='!')
 
 @bot.command(name='stats')
@@ -36,7 +34,7 @@ async def champ_bans(ctx, summoner, champ, role=None):
 
 @bot.command(name='recent')
 async def summoner_recent(ctx, summoner, count=3):
-    matches = requests.post(f"{STATS_API}/summoners/{summoner}/recent/", data={"count": count}).json()
+    matches = requests.get(f"{STATS_API}/summoners/{summoner}/recent/?count={count}").json()
 
     message = f"Top {count} most recent games for {summoner}:\n```diff\n"
 
