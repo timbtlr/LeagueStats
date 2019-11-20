@@ -56,51 +56,41 @@ class SummonerViewSet(viewsets.ModelViewSet):
         summoner = Summoner.objects.get(name__iexact=pk)
         matches = MatchPerformance.objects.filter(summoner=summoner)
 
-        wins = 0
-        kills = 0
-        assists = 0
-        deaths = 0
-        total_gold = 0
-        doubles = 0
-        triples = 0
-        quads = 0
-        pentas = 0
-        total_dmg = 0
+        summoner_stats = {
+            "id": summoner.id,
+            "wins" : 0,
+            "losses": 0,
+            "kills" : 0,
+            "assists" : 0,
+            "deaths" : 0,
+            "total_gold" : 0,
+            "doubles" : 0,
+            "triples" : 0,
+            "quads" : 0,
+            "pentas" : 0,
+            "total_dmg" : 0,
+        }
 
         for match in matches.iterator():
             if match.win:
-                wins += 1
-            kills += match.kills
-            deaths += match.deaths
-            assists += match.assists
-            total_gold += match.gold_earned
-            doubles += match.double_kills
-            triples += match.triple_kills
-            quads += match.quadra_kills
-            pentas += match.penta_kills
-            total_dmg += match.damage_dealt
+                summoner_stats["wins"] += 1
+            else:
+                summoner_stats["losses"] += 1
+            summoner_stats["kills"] += match.kills
+            summoner_stats["deaths"] += match.deaths
+            summoner_stats["assists"] += match.assists
+            summoner_stats["total_gold"] += match.gold_earned
+            summoner_stats["doubles"] += match.double_kills
+            summoner_stats["triples"] += match.triple_kills
+            summoner_stats["quads"] += match.quadra_kills
+            summoner_stats["pentas"] += match.penta_kills
+            summoner_stats["total_dmg"] += match.damage_dealt
 
-        losses = len(matches) - wins
-        avg_gold = float(total_gold / len(matches))
-        avg_dmg = float(total_dmg / len(matches))
+        summoner_stats["avg_gold"] = int(summoner_stats["total_gold"] / len(matches))
+        summoner_stats["avg_dmg"] = int(summoner_stats["total_dmg"] / len(matches))
 
         return Response(
-            data={
-                "id": summoner.id,
-                "kills": kills,
-                "deaths": deaths,
-                "assists": assists,
-                "total_gold": total_gold,
-                "doubles": doubles,
-                "triples": triples,
-                "quads": quads,
-                "pentas": pentas,
-                "total_dmg": total_dmg,
-                "wins": wins,
-                "losses": losses,
-                "avg_gold": avg_gold,
-                "avg_dmg": avg_dmg
-            },
+            data=summoner_stats,
             status=200
         )
 
@@ -108,12 +98,10 @@ class SummonerViewSet(viewsets.ModelViewSet):
     def bans(self, request, pk=None):
         try:
             summoner = Summoner.objects.get(name__iexact=pk)
+            champ = Champion.objects.get(name__iexact=request.data.get("champ"))
         except Summoner.DoesNotExist:
             summoner, created = self.create_by_name(summoner_name)
-            return Response("No games on record for this summoner.  Check back in 30 minutes after games populate.", status=404)
-
-        try:
-            champ = Champion.objects.get(name__iexact=request.data.get("champ"))
+            return Response("No games on record for this summoner.  Check back soon minutes after games populate.", status=404)
         except Champion.DoesNotExist:
             return Response("The provided champion does not exist in the database.", status=404)
 
