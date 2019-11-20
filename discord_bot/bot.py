@@ -22,14 +22,14 @@ async def summoner_stats(ctx, summoner):
 async def champ_bans(ctx, summoner, champ, role=None):
     stats = requests.post(f"{STATS_API}/summoners/{summoner}/bans/", data={"champ": champ, "role": role}).json()
 
-    embed = discord.Embed(title=f"When playing as {champ}, {summoner} has never won against", description="", color=0xff0000)
-    for key, value in stats.get("never").items():
-        embed.add_field(name=key, value=f"{value}%", inline=False)
+    embed = discord.Embed(title=f"When playing as {champ}, {summoner} performs well against", description="", color=0x00ff00)
+    for key, value in stats.get("high").items():
+        embed.add_field(name=key, value=f"{value}% win rate", inline=False)
     await ctx.send("", embed=embed)
 
-    embed = discord.Embed(title=f"When playing as {champ}, {summoner} has low win rates against", description="", color=0xffa500)
+    embed = discord.Embed(title=f"When playing as {champ}, {summoner} performs poorly against", description="", color=0xff0000)
     for key, value in stats.get("low").items():
-        embed.add_field(name=key, value=f"{value}%", inline=False)
+        embed.add_field(name=key, value=f"{value}% win rate", inline=False)
     await ctx.send("", embed=embed)
 
 @bot.command(name='recent')

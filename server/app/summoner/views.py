@@ -125,43 +125,27 @@ class SummonerViewSet(viewsets.ModelViewSet):
         if not matches:
             return Response(f"{cummoner.name} has not played any classic matches played as this champion", status=404)
 
-        bans = {}
-        nevers = {}
-        opposing_champs = matches.values_list("opposing_champ", flat=True)
+        result = {"high": {}, "low": {}}
+        opposing_champs = set(matches.values_list("opposing_champ", flat=True))
         for opponent in opposing_champs:
             try:
-                pct = float(matches.filter(win=True, opposing_champ=opponent).count()) / float(matches.filter(opposing_champ=opponent).count()) * 100.0
-                if pct == 0:
-                    nevers[opponent] = pct
-                elif pct == 100:
-                    continue
-                else:
-                    bans[opponent] = pct
+                champ = Champion.objects.get(pk=opponent)
+                wins_against_champ = matches.filter(win=True, opposing_champ=opponent).count()
+                losses_against_champ = matches.filter(win=False, opposing_champ=opponent).count()
+                matches_against_champ = matches.filter(opposing_champ=opponent).count()
+
+                pct = int(float(wins_against_champ) / float(matches_against_champ * losses_against_champ) * 100)
+                if pct > 0:
+                    if pct > 50:
+                        result["high"][f"{champ.name}, {champ.title}"] = f"{pct}"
+                    elif pct < 50:
+                        result["low"][f"{champ.name}, {champ.title}"] = f"{pct}"
             except:
                 pass # Perfect win record against this champ.  Don't ban.
 
-        result = {"never": {}, "low": {}}
-
-        max = 5
-        index = 0
-        for key, value in nevers.items():
-            index += 1
-            try:
-                champ = Champion.objects.get(pk=key)
-                result["never"][f"{champ.name}, {champ.title}"] = f"{value}"
-            except Champion.DoesNotExist:
-                pass
-            if index >= max:
-                break
-
-        c = Counter(bans) 
-        bad_champs = c.most_common()[:-6-1:-1]
-        for bad in bad_champs:
-            try:
-                champ = Champion.objects.get(pk=bad[0])
-                result["low"][f"{champ.name}, {champ.title}"] = f"{bad[1]}"
-            except Champion.DoesNotExist:
-                pass
+        
+        result["high"] = {c[0]:c[1] for  c in Counter(result["high"]).most_common(5)}
+        result["low"] = {c[0]:c[1] for  c in Counter(result["low"]).most_common()[:-5-1:-1]}
 
         return Response(
             data=result,
