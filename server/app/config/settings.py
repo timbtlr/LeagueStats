@@ -39,6 +39,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localdocker",
     "172.17.0.1",
+    "league-stats-server.herokuapp.com",
 ]
 
 # Application definition

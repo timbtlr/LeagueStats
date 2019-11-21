@@ -10,7 +10,7 @@ STATS_API = os.environ.get("LEAGUE_STATS_API_URL")
 bot = commands.Bot(command_prefix='!')
 
 @bot.command(name='stats')
-async def summoner_stats(ctx, summoner):
+async def summoner_stats(ctx, summoner, count=None):
     """
     Retrieve a set of statistics for a summoner from all games currently on record for that summoner in the LeagueStats app.
 
@@ -19,9 +19,10 @@ async def summoner_stats(ctx, summoner):
     Example:
         !stats ketsun
     """
-    stats = requests.get(f"{STATS_API}/summoners/{summoner}/stats/").json()
+    stats = requests.get(f"{STATS_API}/summoners/{summoner}/stats/", params={"count": count}).json()
     stats.pop("id")
-    embed = discord.Embed(title=f"Statistics for {summoner} for all games on record:", description="", color=0x00ff00)
+
+    embed = discord.Embed(title=f"Statistics for {summoner} for {'all games on record' if not count else 'past ' + count + ' game(s)'}:", description="", color=0x00ff00)
     for key, value in stats.items():
         embed.add_field(name=key.replace("_", " ").title(), value=value, inline=True)
     await ctx.send("", embed=embed)
@@ -30,7 +31,7 @@ async def summoner_stats(ctx, summoner):
 async def champ_bans(ctx, summoner, champ, role=None):
     """
     Displays in Discord a list of champions a summoner should ban while planning to play a specific champion.  Also displays a list of 
-    champions the cummoner plays well against.
+    champions the summoner plays well against.
 
     Contacts the LeagueStats API for the set of high percentage and low percentage win rates for a given summoner/champion combination.
     Optionally, role may be provided to only retrieve matches played as a specific role.

@@ -16,7 +16,7 @@ class MatchPerformance(models.Model):
     summoner = models.ForeignKey(Summoner)
     mode = models.CharField(max_length=100, null=True, blank=True)
     game_type = models.CharField(max_length=255, null=True, blank=True)
-    lane = models.CharField(max_length=10, null=True, blank=True)
+    lane = models.CharField(max_length=100, null=True, blank=True)
     champ = models.IntegerField(default=0)
     opposing_champ = models.IntegerField(default=0)
     timestamp = models.DateTimeField()

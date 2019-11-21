@@ -54,7 +54,11 @@ class SummonerViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'])
     def stats(self, request, pk=None):
         summoner = Summoner.objects.get(name__iexact=pk)
-        matches = MatchPerformance.objects.filter(summoner=summoner)
+        matches = MatchPerformance.objects.filter(summoner=summoner).order_by("-timestamp")
+        params = request.query_params
+        count = params.get("count")
+        if count:
+            matches = matches[:int(count)]
 
         summoner_stats = {
             "id": summoner.id,
@@ -111,7 +115,7 @@ class SummonerViewSet(viewsets.ModelViewSet):
             matches = matches.filter(lane__icontains=f"{role.upper()}")
 
         if not matches:
-            return Response(f"{cummoner.name} has not played any classic matches played as this champion", status=404)
+            return Response(f"{summoner.name} has not played any classic matches played as this champion", status=404)
 
         result = {"high": {}, "low": {}}
         opposing_champs = set(matches.values_list("opposing_champ", flat=True))
